@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }} - Comic Preview</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; background: #111827; color: #f3f4f6; }
+        .panel { background: #1f2937; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+        .panel img { max-width: 100%; border-radius: 10px; }
+        .meta { margin-bottom: 1rem; color: #cbd5e1; }
+        a { color: #7dd3fc; }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <p class="meta">Comic ID: {{ comic_id }}</p>
+
+    {% set panel_list = panels if panels is defined and panels else (story.panels if story and story.panels else []) %}
+    {% if panel_list %}
+        {% for panel in panel_list %}
+            {% set panel_data = panel if panel is mapping else {} %}
+            <section class="panel">
+                <h2>Panel {{ panel_data.get('panel_number', loop.index) }}</h2>
+                {% if panel_data.get('narration') %}
+                    <p><strong>Narration:</strong> {{ panel_data.get('narration') }}</p>
+                {% endif %}
+                {% set dialogue_lines = panel_data.get('dialogue', []) %}
+                {% if dialogue_lines %}
+                    <p><strong>Dialogue:</strong></p>
+                    <ul>
+                        {% for line in dialogue_lines %}
+                            <li>{{ line }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if panel_data.get('caption') %}
+                    <p><strong>Caption:</strong> {{ panel_data.get('caption') }}</p>
+                {% endif %}
+            </section>
+        {% endfor %}
+    {% endif %}
+
+    {% set image_list = comic.images if comic and comic.images else (image_paths if image_paths is defined else []) %}
+    {% if image_list %}
+        <h2>Comic Panels</h2>
+        {% for image_url in image_list %}
+            <section class="panel">
+                <img src="{{ image_url }}" alt="Comic panel image">
+            </section>
+        {% endfor %}
+    {% endif %}
+
+    <p><a href="/">← Create another comic</a></p>
+</body>
+</html>

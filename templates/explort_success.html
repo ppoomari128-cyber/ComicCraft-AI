@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }} - Export Complete</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; background: #0f172a; color: #e2e8f0; }
+        .card { background: #1e293b; max-width: 720px; margin: auto; padding: 2rem; border-radius: 12px; }
+        a { color: #7dd3fc; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Export complete</h1>
+        <p><strong>{{ title }}</strong> was exported successfully.</p>
+        <p>Comic ID: {{ comic_id }}</p>
+        {% if comic and comic.output_path %}
+            <p>Output file: <code>{{ comic.output_path }}</code></p>
+        {% endif %}
+        <p><a href="/preview/{{ comic_id }}">Open preview</a> | <a href="/">Back home</a></p>
+    </div>
+</body>
+</html>

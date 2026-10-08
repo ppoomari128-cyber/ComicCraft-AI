@@ -1,0 +1,34 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run ComicCraft app",
+			"type": "shell",
+			"command": "cmd /c \"cd /d C:\\Users\\acer\\Documents\\comiccraftAI && C:\\Users\\acer\\Documents\\comiccraftAI\\.venv\\Scripts\\python.exe -m flask --app app.main run --host 0.0.0.0 --port 5000\"",
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Check Python env",
+			"type": "shell",
+			"command": "\"C:\\Users\\acer\\Documents\\comiccraftAI\\.venv\\Scripts\\python.exe\" -c \"import sys; print(sys.executable); print('OK')\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Check SDK",
+			"type": "shell",
+			"command": "cmd /c \"\\\"C:\\Users\\acer\\Documents\\comiccraftAI\\.venv\\Scripts\\python.exe\\\" -c \\\"import sys; print(sys.executable); print('OK')\\\"\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Probe Gemini image API",
+			"type": "shell",
+			"command": "cmd /c \"cd /d C:\\Users\\acer\\Documents\\comiccraftAI && \\\"C:\\Users\\acer\\Documents\\comiccraftAI\\.venv\\Scripts\\python.exe\\\" _image_probe.py\"",
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

@@ -1,0 +1,28 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+.env/
+
+# Local configuration
+.env
+.env.*
+
+# Generated outputs
+static/
+!static/.gitkeep
+!static/style.css
+
+# Build artifacts
+static/exports/
+
+# Tooling and caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage.xml
+htmlcov/
+test_hf.py

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ComicCraft AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <main class="page-shell">
+        <section class="hero panel">
+            <div class="hero-copy">
+                <p class="eyebrow">AI Comic Studio</p>
+                <h1>ComicCraft AI</h1>
+                <p class="lead">
+                    Turn a single idea into a cinematic comic story with a hero, mood, and a full panel sequence.
+                </p>
+            </div>
+            <div class="badge-card">
+                <span>Ready</span>
+                <strong>3–5 panels</strong>
+            </div>
+        </section>
+
+        <section class="composer panel">
+            <form id="comic-form" class="comic-form" method="post" action="{{ url_for('main.generate_comic') }}">
+                <div class="field-row">
+                    <label>
+                        <span>Title / Character</span>
+                        <input type="text" name="title" value="Sky Run" placeholder="Sky Run" required>
+                    </label>
+                    <label>
+                        <span>Art style</span>
+                        <input type="text" name="style" value="cinematic comic book" placeholder="cinematic comic book">
+                    </label>
+                </div>
+
+                <label>
+                    <span>Story prompt</span>
+                    <textarea name="prompt" rows="5" placeholder="A fox races across the moonlit rooftops..." required>A fox races across the moonlit rooftops and discovers a secret city hidden above the clouds.</textarea>
+                </label>
+
+                <div class="field-row">
+                    <label>
+                        <span>Tone</span>
+                        <select name="tone">
+                            <option value="adventure" selected>Adventure</option>
+                            <option value="mystery">Mystery</option>
+                            <option value="fantasy">Fantasy</option>
+                            <option value="sci-fi">Sci-fi</option>
+                            <option value="dramatic">Dramatic</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Panels</span>
+                        <input type="number" name="panels" min="1" max="5" value="3">
+                    </label>
+
+                    <label>
+                        <span>Image Backend</span>
+                        <select name="backend">
+                            <option value="hf" selected>Hugging Face</option>
+                            <option value="gemini">Google Gemini</option>
+                            <option value="free">Free AI Engine</option>
+                        </select>
+                    </label>
+                </div>
+
+                <button type="submit">Generate comic</button>
+            </form>
+
+            <div id="result" class="result" aria-live="polite"></div>
+        </section>
+
+        {% for panel in comic_panels|default([]) %}
+        <article class="comic-panel">
+            <h2>Panel {{ panel.panel }}</h2>
+            <h3>{{ panel.title }}</h3>
+            <img src="{{ panel.image }}" alt="{{ panel.title }}">
+            <p><strong>Caption:</strong> {{ panel.caption }}</p>
+            <p><strong>Narration:</strong> {{ panel.narration }}</p>
+            <p class="dialogue">{{ panel.dialogue }}</p>
+        </article>
+        {% endfor %}
+    </main>
+
+    <script>
+      const form = document.getElementById('comic-form');
+      const result = document.getElementById('result');
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+
+        result.textContent = 'Generating your comic...';
+        result.classList.add('loading');
+
+        try {
+          const response = await fetch('{{ url_for("main.generate_comic") }}', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const payload = await response.json();
+          if (!response.ok || payload.status !== 'success') {
+            throw new Error(payload.error || 'Generation failed.');
+          }
+
+          const { title, comic_id, panels } = payload;
+          result.classList.remove('loading');
+          result.innerHTML = `
+            <strong>Success!</strong>
+            <span>${title} is ready.</span>
+            <a href="/preview/${comic_id}">Open preview</a>
+            <small>${panels} panels generated.</small>
+          `;
+        } catch (error) {
+          result.classList.remove('loading');
+          result.innerHTML = `<strong>Error:</strong> ${error.message}`;
+        }
+      });
+    </script>
+</body>
+</html>
